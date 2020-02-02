@@ -12,7 +12,7 @@ namespace WebAddressbookTests
     public class ApplicationManager
     {
         public IWebDriver driver;
-        public string baseURL = "http://localhost:8080/";
+        public string baseURL;
 
         protected LoginHelper loginHelper;
         protected NavigationHelper navigator;
@@ -24,12 +24,17 @@ namespace WebAddressbookTests
             options.BrowserExecutableLocation = @"C:\Program Files\Mozilla Firefox_Esr\firefox.exe";
             options.UseLegacyImplementation = true;
             driver = new FirefoxDriver(options);
+            baseURL = "http://localhost:8080/";
 
-            loginHelper = new LoginHelper(driver);
-            navigator = new NavigationHelper(driver, baseURL);
-            groupHelper = new GroupHelper(driver);
+            loginHelper = new LoginHelper(this);
+            navigator = new NavigationHelper(this, baseURL);
+            groupHelper = new GroupHelper(this);
         }
 
+        public IWebDriver Driver
+        {
+            get { return driver; }
+        }
         public void Stop()
         {
             try
