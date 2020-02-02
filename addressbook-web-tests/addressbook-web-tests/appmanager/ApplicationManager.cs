@@ -1,38 +1,36 @@
-﻿using NUnit.Framework;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Firefox;
-using System;
-using System.Text;
+using OpenQA.Selenium.Support.UI;
 
 namespace WebAddressbookTests
 {
-    public class TestBase
+    public class ApplicationManager
     {
-        protected IWebDriver driver;
-        private StringBuilder verificationErrors;
-        protected string baseURL;
+        public IWebDriver driver;
+        public string baseURL = "http://localhost:8080/";
 
         protected LoginHelper loginHelper;
         protected NavigationHelper navigator;
         protected GroupHelper groupHelper;
 
-        [SetUp]
-        public void SetupTest()
+        public ApplicationManager()
         {
             FirefoxOptions options = new FirefoxOptions();
-            options.BrowserExecutableLocation = @"c:\Program Files\Mozilla Firefox_Esr\firefox.exe";
+            options.BrowserExecutableLocation = @"C:\Program Files\Mozilla Firefox_Esr\firefox.exe";
             options.UseLegacyImplementation = true;
             driver = new FirefoxDriver(options);
-            baseURL = "http://localhost:8080/";
-            verificationErrors = new StringBuilder();
 
             loginHelper = new LoginHelper(driver);
             navigator = new NavigationHelper(driver, baseURL);
             groupHelper = new GroupHelper(driver);
         }
 
-        [TearDown]
-        public void TeardownTest()
+        public void Stop()
         {
             try
             {
@@ -42,7 +40,21 @@ namespace WebAddressbookTests
             {
                 // Ignore errors if unable to close the browser
             }
-            Assert.AreEqual("", verificationErrors.ToString());
+        }
+
+        public LoginHelper Auth
+        {
+            get { return loginHelper; }
+        }
+
+        public NavigationHelper Navigator
+        {
+            get { return navigator; }
+        }
+
+        public GroupHelper Groups
+        {
+            get { return groupHelper; }
         }
     }
 }
