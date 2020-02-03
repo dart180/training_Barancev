@@ -48,7 +48,6 @@ namespace WebAddressbookTests
             driver.FindElement(By.Name("edit")).Click();
             return this;
         }
-
         public GroupHelper Remove(int p)
         {
             manager.Navigator.GoToGroupsPage();
