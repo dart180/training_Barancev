@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using OpenQA.Selenium.Internal;
 
 namespace WebAddressbookTests
 {
@@ -29,6 +30,10 @@ namespace WebAddressbookTests
         public GroupHelper Modify(int p, GroupData newData)
         {
             manager.Navigator.GoToGroupsPage();
+            if (!IsElementPresent(By.ClassName("group")))
+            {
+                Create(new GroupData("для теста модификации"));
+            }
             SelectGroup(p);
             InitGroupModification();
             FillGroupForm(newData);
@@ -51,6 +56,10 @@ namespace WebAddressbookTests
         public GroupHelper Remove(int p)
         {
             manager.Navigator.GoToGroupsPage();
+            if (!IsElementPresent(By.ClassName("group")))
+            {
+                Create(new GroupData("для теста удаления"));
+            }
             SelectGroup(p);
             RemoveGroup();
             ReturnToGroupsPage();

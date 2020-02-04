@@ -13,12 +13,17 @@ namespace WebAddressbookTests
             InitContactCreation();
             FillContactForm(contact);
             SubmitContactCreation();
+            manager.Navigator.GoToHomePage();
             return this;
         }
 
         public ContactHelper Remove(int v)
         {
             manager.Navigator.GoToHomePage();
+            if (!IsElementPresent(By.ClassName("entry")))
+            {
+                Create(new ContactData("Для теста", "удаления"));
+            }
             SelectContact(v);
             RemoveContact();
             manager.Navigator.GoToHomePage();
@@ -35,10 +40,15 @@ namespace WebAddressbookTests
         public ContactHelper Modify(int v, ContactData newData)
         {
             manager.Navigator.GoToHomePage();
+            if (!IsElementPresent(By.ClassName("entry")))
+            {
+                Create(new ContactData("Для теста", "изменения"));
+            }
             SelectContact(v);
             InitContactModification();
             FillContactForm(newData);
             SubmitContactModification();
+            manager.Navigator.GoToHomePage();
             return this;
         }
 
