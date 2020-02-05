@@ -44,6 +44,11 @@ namespace WebAddressbookTests
             return this;
         }
 
+        public int GetGroupCount()
+        {
+            return driver.FindElements(By.CssSelector("span.group")).Count;
+        }
+
         public GroupHelper SubmitGroupModification()
         {
             driver.FindElement(By.Name("update")).Click();
