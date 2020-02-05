@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using NUnit.Framework;
 using OpenQA.Selenium.Internal;
 
 namespace WebAddressbookTests
@@ -15,6 +16,7 @@ namespace WebAddressbookTests
         {
 
         }
+
 
         public GroupHelper Create(GroupData group)
         {
@@ -79,7 +81,7 @@ namespace WebAddressbookTests
 
         public GroupHelper SelectGroup(int index)
         {
-            driver.FindElement(By.XPath("(//input[@name='selected[]'])[" + index + "]")).Click();
+            driver.FindElement(By.XPath("(//input[@name='selected[]'])[" + (index+1) + "]")).Click();
             return this;
         }
 
@@ -101,6 +103,17 @@ namespace WebAddressbookTests
             Type(By.Name("group_header"), group.Header);
             Type(By.Name("group_footer"), group.Footer);
             return this;
+        }
+        public List<GroupData> GetGroupList()
+        {
+            List<GroupData> groups = new List<GroupData>();
+            manager.Navigator.GoToGroupsPage();
+            ICollection<IWebElement> elements =  driver.FindElements(By.CssSelector("span.group"));
+            foreach (IWebElement element in elements)
+            {
+                groups.Add(new GroupData(element.Text));
+            }
+            return groups;
         }
     }
 }
