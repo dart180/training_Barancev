@@ -18,6 +18,9 @@ namespace WebAddressbookTests
 
             var delElement = oldGroups[0].Id;
             oldGroups.RemoveAt(0);
+            oldGroups.Sort();
+            newGroups.Sort();
+
             Assert.AreEqual(oldGroups, newGroups);
 
             foreach (GroupData group in newGroups)

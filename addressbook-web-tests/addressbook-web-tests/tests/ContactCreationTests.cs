@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -7,7 +8,7 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.Support.UI;
 
-namespace WebAddressbookTests 
+namespace WebAddressbookTests
 {
     [TestFixture]
     public class ContactCreationTests : AuthTestBase
@@ -15,8 +16,20 @@ namespace WebAddressbookTests
         [Test]
         public void ContactCreationTest()
         {
-            ContactData contact = new ContactData("Ivan", "Сидоров");
-            app.Contacts.Create(contact);
+            ContactData contactNew = new ContactData("Ivan", "Сидоров");
+            List<ContactData> oldContacts = app.Contacts.GetContactList();
+
+            app.Contacts.Create(contactNew);
+
+            Assert.AreEqual(oldContacts.Count + 1, app.Contacts.GetContactCount());
+
+            List<ContactData> newContacts = app.Contacts.GetContactList();
+            oldContacts.Add(contactNew);
+            oldContacts.Sort();
+            newContacts.Sort();
+            Assert.AreEqual(oldContacts, newContacts);
+
+
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿using OpenQA.Selenium;
+﻿using System;
+using System.Collections.Generic;
+using OpenQA.Selenium;
 
 namespace WebAddressbookTests
 {
@@ -20,9 +22,9 @@ namespace WebAddressbookTests
         public ContactHelper Remove(int v)
         {
             manager.Navigator.GoToHomePage();
-            if (!IsElementPresent(By.ClassName("entry")))
+            if (!IsElementPresent(By.Name("entry")))
             {
-                Create(new ContactData("Для теста", "удаления"));
+                Create(new ContactData("Длятеста", "удаления"));
             }
             SelectContact(v);
             RemoveContact();
@@ -34,15 +36,16 @@ namespace WebAddressbookTests
         {
             driver.FindElement(By.XPath("//input[@value='Delete']")).Click();
             driver.SwitchTo().Alert().Accept();
+            contactCache = null;
             return this;
         }
 
         public ContactHelper Modify(int v, ContactData newData)
         {
             manager.Navigator.GoToHomePage();
-            if (!IsElementPresent(By.ClassName("entry")))
+            if (!IsElementPresent(By.Name("entry")))
             {
-                Create(new ContactData("Для теста", "изменения"));
+                Create(new ContactData("Длятеста", "изменения"));
             }
             SelectContact(v);
             InitContactModification();
@@ -50,6 +53,10 @@ namespace WebAddressbookTests
             SubmitContactModification();
             manager.Navigator.GoToHomePage();
             return this;
+        }
+        public int GetContactCount()
+        {
+            return driver.FindElements(By.Name("entry")).Count;
         }
 
         public ContactHelper InitContactCreation()
@@ -79,13 +86,34 @@ namespace WebAddressbookTests
         public ContactHelper SubmitContactCreation()
         {
             driver.FindElement(By.Name("submit")).Click();
+            contactCache = null;
             return this;
         }
 
         public ContactHelper SelectContact(int index)
         {
-            driver.FindElement(By.XPath("(//input[@name='selected[]'])[" + index + "]")).Click();
+            driver.FindElement(By.XPath("(//input[@name='selected[]'])[" + (index + 1) + "]")).Click();
             return this;
+        }
+
+        private List<ContactData> contactCache = null;
+        public List<ContactData> GetContactList()
+        {
+            if (contactCache == null)
+            {
+                contactCache = new List<ContactData>();
+                manager.Navigator.GoToHomePage();
+                ICollection<IWebElement> elements = driver.FindElements(By.Name("entry"));
+                foreach (IWebElement element in elements)
+                {
+                    String[] words = element.Text.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                    contactCache.Add(new ContactData(words[1], words[0])
+                    {
+                        Id = element.FindElement(By.TagName("input")).GetAttribute("value")
+                    });
+                }
+            }
+            return new List<ContactData>(contactCache);
         }
     }
 }
