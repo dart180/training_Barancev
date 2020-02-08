@@ -20,6 +20,12 @@ namespace WebAddressbookTests
         public string HomePhone { get; set; }
         public string MobilePhone { get; set; }
         public string WorkPhone { get; set; }
+        public string HomePage { get; set; }
+        public string HomePhone2 { get; set; }
+
+        public string Email { get; set; }
+        public string Email2 { get; set; }
+        public string Email3 { get; set; }
 
         public string allPhones;
         public string AllPhones
@@ -32,10 +38,27 @@ namespace WebAddressbookTests
                 }
                 else
                 {
-                    return (CleanUp(HomePhone) + CleanUp(MobilePhone) + CleanUp(WorkPhone)).Trim();
+                    return (CleanUp(HomePhone) + CleanUp(MobilePhone) + CleanUp(WorkPhone) + CleanUp(HomePhone2)).Trim();
                 }
             }
             set { allPhones = value; }
+        }
+
+        public string allEmail;
+        public string AllEmail
+        {
+            get
+            {
+                if (allEmail != null)
+                {
+                    return allEmail;
+                }
+                else
+                {
+                    return (CleanUp(Email) + CleanUp(Email2) + CleanUp(Email3)).Trim();
+                }
+            }
+            set { allEmail = value; }
         }
 
         private string CleanUp(string phone)
