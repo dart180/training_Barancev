@@ -57,6 +57,7 @@ namespace WebAddressbookTests
         public GroupHelper InitGroupModification()
         {
             driver.FindElement(By.Name("edit")).Click();
+            groupCache = null;
             return this;
         }
         public GroupHelper Remove(int p)

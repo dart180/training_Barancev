@@ -8,11 +8,42 @@ namespace WebAddressbookTests
 {
     public class ContactData : IEquatable<ContactData>, IComparable<ContactData>
     {
-        public ContactData(string firstname, string lastname)
+        public ContactData(string firstname, string secondname)
         {
             Firstname = firstname;
-            Lastname = lastname;
+            Secondname = secondname;
         }
+        public string Firstname { get; set; }
+        public string Secondname { get; set; }
+        public string Address { get; set; }
+        public string HomePhone { get; set; }
+        public string MobilePhone { get; set; }
+        public string WorkPhone { get; set; }
+
+        public string allPhones;
+        public string AllPhones
+        {
+            get
+            {
+                if (allPhones != null)
+                {
+                    return allPhones;
+                }
+                else
+                {
+                    return (CleanUp(HomePhone) + CleanUp(MobilePhone) + CleanUp(WorkPhone)).Trim();
+                }
+            }
+            set { allPhones = value; }
+        }
+
+        private string CleanUp(string phone)
+        {
+            if (phone == null || phone == "") return "";
+            return phone.Replace(" ", "").Replace("-", "").Replace("(", "").Replace(")", "") + "\r\n";
+        }
+
+        public string Id { get; set; }
 
         public bool Equals(ContactData other)
         {
@@ -26,17 +57,17 @@ namespace WebAddressbookTests
                 return true;
             }
 
-            return Firstname == other.Firstname && Lastname == other.Lastname;
+            return Firstname == other.Firstname && Secondname == other.Secondname;
         }
 
         public override int GetHashCode()
         {
-            return Firstname.GetHashCode();
+            return (Firstname + " " + Secondname).GetHashCode();
         }
 
         public override string ToString()
         {
-            return "name=" + Firstname + " lastname=" + Lastname;
+            return "name=" + Firstname + " lastname=" + Secondname;
         }
 
         public int CompareTo(ContactData other)
@@ -52,14 +83,8 @@ namespace WebAddressbookTests
             }
             else
             {
-                return Lastname.CompareTo(other.Lastname);
+                return Secondname.CompareTo(other.Secondname);
             }
         }
-
-        public string Firstname { get; set; }
-
-        public string Lastname { get; set; }
-        public string Id { get; set; }
-
     }
 }
