@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Remoting.Messaging;
+using System.Xml;
+using System.Xml.Serialization;
 
 namespace WebAddressbookTests
 {
@@ -23,7 +25,7 @@ namespace WebAddressbookTests
             return groups;
         }
 
-        public static IEnumerable<GroupData> GroupDataFromFile()
+        public static IEnumerable<GroupData> GroupDataFromCsvFile()
         {
             List<GroupData> groups = new List<GroupData>();
             string[] lines = File.ReadAllLines(@"groups.csv");
@@ -40,7 +42,14 @@ namespace WebAddressbookTests
             return groups;
         }
 
-        [Test, TestCaseSource("GroupDataFromFile")]
+        public static IEnumerable<GroupData> GroupDataFromXmlFile()
+        {
+            return (List<GroupData>)
+                new XmlSerializer(typeof(List<GroupData>))
+                    .Deserialize(new StreamReader(@"groups.xml"));
+        }
+
+        [Test, TestCaseSource("GroupDataFromXmlFile")]
         public void GroupCreationTest(GroupData group)
         {
             List<GroupData> oldGroups = app.Groups.GetGroupList();
@@ -55,13 +64,13 @@ namespace WebAddressbookTests
             newGroups.Sort();
             Assert.AreEqual(oldGroups, newGroups);
         }
-        
+
         [Test]
         public void BadNameGroupCreationTest()
         {
-            GroupData group = new GroupData("a'a");
-            group.Header = "";
-            group.Footer = "";
+            GroupData group = new GroupData("0;1RMJO");
+            group.Header = "Q,.E;?%G#%HQ*6:I6F]S*B@^2Q[#;";
+            group.Footer = "RW:V?=?09^#9\\&lt;XAHVKB6FT%JJ&amp;";
             List<GroupData> oldGroups = app.Groups.GetGroupList();
 
             app.Groups.Create(group);
