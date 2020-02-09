@@ -15,13 +15,20 @@ namespace WebAddressbookTests
             Secondname = secondname;
         }
         public string Firstname { get; set; }
+        public string Middlename { get; set; }
         public string Secondname { get; set; }
+        public string Nickname { get; set; }
+        public string Company { get; set; }
+        public string Title { get; set; }
         public string Address { get; set; }
         public string HomePhone { get; set; }
         public string MobilePhone { get; set; }
         public string WorkPhone { get; set; }
+        public string Fax { get; set; }
         public string HomePage { get; set; }
+        public string Address2 { get; set; }
         public string HomePhone2 { get; set; }
+        public string Notes { get; set; }
 
         public string Email { get; set; }
         public string Email2 { get; set; }
