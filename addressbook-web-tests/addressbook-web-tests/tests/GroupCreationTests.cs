@@ -5,6 +5,7 @@ using System.IO;
 using System.Runtime.Remoting.Messaging;
 using System.Xml;
 using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace WebAddressbookTests
 {
@@ -42,6 +43,12 @@ namespace WebAddressbookTests
             return groups;
         }
 
+        public static IEnumerable<GroupData> GroupDataFromJsonFile()
+        {
+            return JsonConvert.DeserializeObject<List<GroupData>>(
+                File.ReadAllText(@"groups.json"));
+        }
+
         public static IEnumerable<GroupData> GroupDataFromXmlFile()
         {
             return (List<GroupData>)
@@ -49,7 +56,7 @@ namespace WebAddressbookTests
                     .Deserialize(new StreamReader(@"groups.xml"));
         }
 
-        [Test, TestCaseSource("GroupDataFromXmlFile")]
+        [Test, TestCaseSource("GroupDataFromJsonFile")]
         public void GroupCreationTest(GroupData group)
         {
             List<GroupData> oldGroups = app.Groups.GetGroupList();
@@ -68,9 +75,9 @@ namespace WebAddressbookTests
         [Test]
         public void BadNameGroupCreationTest()
         {
-            GroupData group = new GroupData("0;1RMJO");
-            group.Header = "Q,.E;?%G#%HQ*6:I6F]S*B@^2Q[#;";
-            group.Footer = "RW:V?=?09^#9\\&lt;XAHVKB6FT%JJ&amp;";
+            GroupData group = new GroupData("a'a");
+            group.Header = "";
+            group.Footer = "";
             List<GroupData> oldGroups = app.Groups.GetGroupList();
 
             app.Groups.Create(group);
