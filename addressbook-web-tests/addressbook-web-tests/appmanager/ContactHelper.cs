@@ -93,6 +93,13 @@ namespace WebAddressbookTests
         {
             Type(By.Name("firstname"), contact.Firstname);
             Type(By.Name("lastname"), contact.Secondname);
+            Type(By.Name("middlename"), contact.Middlename);
+            Type(By.Name("nickname"), contact.Nickname);
+            Type(By.Name("company"), contact.Company);
+            Type(By.Name("title"), contact.Title);
+            Type(By.Name("address"), contact.Address);
+            Type(By.Name("home"), contact.HomePhone);
+            Type(By.Name("address2"), contact.Address2);
             return this;
         }
 
