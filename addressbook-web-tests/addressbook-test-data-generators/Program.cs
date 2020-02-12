@@ -5,7 +5,9 @@ using WebAddressbookTests;
 using System.Xml;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
+using Excel = Microsoft.Office.Interop.Excel;
 using Formatting = Newtonsoft.Json.Formatting;
+
 
 namespace addressbook_test_data_generators
 {
@@ -14,7 +16,7 @@ namespace addressbook_test_data_generators
         static void Main(string[] args)
         {
             int count = Convert.ToInt32(args[0]);
-            StreamWriter writer = new StreamWriter(args[1]);
+            string filename = args[1];
             string format = args[2];
             List<GroupData> groups = new List<GroupData>();
             for (int i = 0; i < count; i++)
@@ -26,24 +28,56 @@ namespace addressbook_test_data_generators
                 });
             }
 
-            if (format == "csv")
+            if (format == "excel")
             {
-                writeCroupsToCsvFile(groups, writer);
-            }
-            else if (format == "xml")
-            {
-                writeGroupsToXmlFile(groups, writer);
-            }
-            else if (format == "json")
-            {
-                writeGroupsToJsonFile(groups, writer);
+                writeCroupsToExcelFile(groups, filename);
             }
             else
             {
-                System.Console.Out.Write("Unrecognized format " + format);
+                StreamWriter writer = new StreamWriter(filename);
+                if (format == "csv")
+                {
+                    writeCroupsToCsvFile(groups, writer);
+                }
+                else if (format == "xml")
+                {
+                    writeGroupsToXmlFile(groups, writer);
+                }
+                else if (format == "json")
+                {
+                    writeGroupsToJsonFile(groups, writer);
+                }
+                else
+                {
+                    System.Console.Out.Write("Unrecognized format " + format);
+                }
+
+                writer.Close();
+            }
+        }
+
+        private static void writeCroupsToExcelFile(List<GroupData> groups, string filename)
+        {
+            Excel.Application app = new Excel.Application();
+            app.Visible = true;
+            Excel.Workbook wb = app.Workbooks.Add();
+            Excel.Worksheet sheet = wb.ActiveSheet;
+            sheet.Cells[1, 1] = "test";
+            int row = 1;
+            foreach (GroupData group in groups)
+            {
+                sheet.Cells[row, 1] = group.Name;
+                sheet.Cells[row, 2] = group.Header;
+                sheet.Cells[row, 3] = group.Footer;
+                row++;
             }
 
-            writer.Close();
+            string fullpath = Path.Combine(Directory.GetCurrentDirectory(), filename);
+            File.Delete(fullpath);
+            wb.SaveAs(fullpath);
+            wb.Close();
+            app.Visible = false;
+            app.Quit();
         }
 
         static void writeCroupsToCsvFile(List<GroupData> groups, StreamWriter writer)
