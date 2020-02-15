@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections;
+﻿using OpenQA.Selenium;
+using OpenQA.Selenium.Support.UI;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using OpenQA.Selenium;
 
 namespace WebAddressbookTests
 {
@@ -21,7 +21,33 @@ namespace WebAddressbookTests
             manager.Navigator.GoToHomePage();
             return this;
         }
-        
+
+        public void AddContactToGroup(ContactData contact, GroupData group)
+        {
+            manager.Navigator.GoToHomePage();
+            ClearGroupFilter();
+            SelectContact(contact.Id);
+            SelectGroupToAdd(group.Name);
+            CommitAddingContactToGroup();
+            new WebDriverWait(driver, TimeSpan.FromSeconds(10))
+                .Until(d => d.FindElements(By.CssSelector("div.msgbox")).Count > 0);
+        }
+
+        private void CommitAddingContactToGroup()
+        {
+            driver.FindElement(By.Name("add")).Click();
+        }
+
+        private void SelectGroupToAdd(string name)
+        {
+            new SelectElement(driver.FindElement(By.Name("to_group"))).SelectByText(name);
+        }
+
+        public void ClearGroupFilter()
+        {
+            new SelectElement(driver.FindElement(By.Name("group"))).SelectByText("[all]");
+        }
+
         public ContactHelper Remove(int v)
         {
             manager.Navigator.GoToHomePage();
@@ -29,7 +55,7 @@ namespace WebAddressbookTests
             {
                 Create(new ContactData("Длятеста", "удаления"));
             }
-            SelectContact(v);
+            SelectContact(v.ToString());
             RemoveContact();
             manager.Navigator.GoToHomePage();
             return this;
@@ -50,7 +76,7 @@ namespace WebAddressbookTests
             {
                 Create(new ContactData("Длятеста", "изменения"));
             }
-            SelectContact(v);
+            SelectContact(v.ToString());
             InitContactModification(0);
             FillContactForm(newData);
             SubmitContactModification();
@@ -110,11 +136,16 @@ namespace WebAddressbookTests
             return this;
         }
 
-        public ContactHelper SelectContact(int index)
+        public ContactHelper SelectContact(string contactId)
         {
-            driver.FindElement(By.XPath("(//input[@name='selected[]'])[" + (index + 1) + "]")).Click();
+            driver.FindElement(By.Id(contactId)).Click();
             return this;
         }
+        //public ContactHelper SelectContact(int index)
+        //{
+        //    driver.FindElement(By.XPath("(//input[@name='selected[]'])[" + (index + 1) + "]")).Click();
+        //    return this;
+        //}
 
         private List<ContactData> contactCache = null;
         public List<ContactData> GetContactList()

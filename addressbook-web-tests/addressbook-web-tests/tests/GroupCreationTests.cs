@@ -118,10 +118,9 @@ namespace WebAddressbookTests
         [Test]
         public void TestDBConnectivity()
         {
-            Console.Out.WriteLine("ping");
-            foreach (ContactData contact in GroupData.GetAll()[0].GetContacts())
+            foreach (ContactData contact in ContactData.GetAll())
             {
-                Console.Out.WriteLine(contact);
+                Console.Out.WriteLine(contact.Deprecated);
             }
 
         }
