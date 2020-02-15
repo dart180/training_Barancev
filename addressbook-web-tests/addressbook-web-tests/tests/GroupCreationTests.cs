@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.Remoting.Messaging;
 using System.Xml;
 using System.Xml.Serialization;
@@ -67,10 +68,10 @@ namespace WebAddressbookTests
             {
                 groups.Add(new GroupData()
                 {
-                    Name = range.Cells[i,1].Value,
-                    Header = range.Cells[i,1].Value,
-                    Footer = range.Cells[i,1].Value
-                    
+                    Name = range.Cells[i, 1].Value,
+                    Header = range.Cells[i, 1].Value,
+                    Footer = range.Cells[i, 1].Value
+
                 });
             }
 
@@ -78,7 +79,7 @@ namespace WebAddressbookTests
             app.Visible = false;
             app.Quit();
             return groups;
-            
+
         }
 
         [Test, TestCaseSource("GroupDataFromExcelFile")]
@@ -87,7 +88,7 @@ namespace WebAddressbookTests
             List<GroupData> oldGroups = app.Groups.GetGroupList();
 
             app.Groups.Create(group);
-            
+
             Assert.AreEqual(oldGroups.Count + 1, app.Groups.GetGroupCount());
 
             List<GroupData> newGroups = app.Groups.GetGroupList();
@@ -112,6 +113,22 @@ namespace WebAddressbookTests
             oldGroups.Sort();
             newGroups.Sort();
             Assert.AreEqual(oldGroups, newGroups);
+        }
+
+        [Test]
+        public void TestDBConnectivity()
+        {
+            DateTime start = DateTime.Now;
+            List<GroupData> fromUi = app.Groups.GetGroupList();
+            DateTime end = DateTime.Now;
+            System.Console.Out.WriteLine(end.Subtract(start));
+            start = DateTime.Now;
+            AddressBookDB db = new AddressBookDB();
+            List<GroupData> fromDb = (from g in db.Groups select g).ToList();
+            db.Close();
+            end = DateTime.Now;
+            System.Console.Out.WriteLine(end.Subtract(start));
+
         }
     }
 }
