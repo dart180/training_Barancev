@@ -4,19 +4,18 @@ using NUnit.Framework;
 namespace WebAddressbookTests
 {
     [TestFixture]
-    public class ContactRemovalTests : GroupTestBase
+    public class ContactRemovalTests : ContactTestBase
     {
         [Test]
         public void ContactRemovalTest()
         {
-            List<ContactData> oldContacts = app.Contacts.GetContactList();
-
-            app.Contacts.Remove(0);
+            List<ContactData> oldContacts = ContactData.GetAll();
+            ContactData toBeRemoved = oldContacts[0];
+            app.Contacts.Remove(toBeRemoved);
 
             Assert.AreEqual(oldContacts.Count - 1, app.Contacts.GetContactCount());
-            List<ContactData> newContacts = app.Contacts.GetContactList();
-
-            var delElement = oldContacts[0].Id;
+            List<ContactData> newContacts = ContactData.GetAll();
+            
             oldContacts.RemoveAt(0);
             oldContacts.Sort();
             newContacts.Sort();
@@ -25,7 +24,7 @@ namespace WebAddressbookTests
 
             foreach (ContactData contact in newContacts)
             {
-                Assert.AreNotEqual(contact.Id, delElement);
+                Assert.AreNotEqual(contact.Id, toBeRemoved.Id);
             }
         }
     }

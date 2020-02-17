@@ -42,7 +42,20 @@ namespace WebAddressbookTests
             ReturnToGroupsPage();
             return this;
         }
-
+        public GroupHelper Modify(GroupData oldData, GroupData newData)
+        {
+            manager.Navigator.GoToGroupsPage();
+            if (!IsElementPresent(By.ClassName("group")))
+            {
+                Create(new GroupData("для теста модификации"));
+            }
+            SelectGroup(oldData.Id);
+            InitGroupModification();
+            FillGroupForm(newData);
+            SubmitGroupModification();
+            ReturnToGroupsPage();
+            return this;
+        }
         public int GetGroupCount()
         {
             return driver.FindElements(By.CssSelector("span.group")).Count;

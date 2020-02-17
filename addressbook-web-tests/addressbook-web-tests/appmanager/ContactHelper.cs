@@ -60,7 +60,16 @@ namespace WebAddressbookTests
             manager.Navigator.GoToHomePage();
             return this;
         }
-        
+
+        public ContactHelper Remove(ContactData contact)
+        {
+            manager.Navigator.GoToHomePage();
+            SelectContact(contact.Id);
+            RemoveContact();
+            manager.Navigator.GoToHomePage();
+            return this;
+        }
+
         public ContactHelper RemoveContact()
         {
             driver.FindElement(By.XPath("//input[@value='Delete']")).Click();
@@ -78,6 +87,16 @@ namespace WebAddressbookTests
             }
             SelectContact(v.ToString());
             InitContactModification(0);
+            FillContactForm(newData);
+            SubmitContactModification();
+            manager.Navigator.GoToHomePage();
+            return this;
+        }
+        public ContactHelper Modify(ContactData oldData, ContactData newData)
+        {
+            manager.Navigator.GoToHomePage();
+            //SelectContact(oldData.Id);
+            InitContactModification(Int32.Parse(oldData.Id));
             FillContactForm(newData);
             SubmitContactModification();
             manager.Navigator.GoToHomePage();
@@ -141,11 +160,11 @@ namespace WebAddressbookTests
             driver.FindElement(By.Id(contactId)).Click();
             return this;
         }
-        //public ContactHelper SelectContact(int index)
-        //{
-        //    driver.FindElement(By.XPath("(//input[@name='selected[]'])[" + (index + 1) + "]")).Click();
-        //    return this;
-        //}
+        public ContactHelper SelectContact(int index)
+        {
+            driver.FindElement(By.XPath("(//input[@name='selected[]'])[" + (index + 1) + "]")).Click();
+            return this;
+        }
 
         private List<ContactData> contactCache = null;
         public List<ContactData> GetContactList()
