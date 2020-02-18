@@ -48,6 +48,16 @@ namespace WebAddressbookTests
             new SelectElement(driver.FindElement(By.Name("group"))).SelectByText("[all]");
         }
 
+        public void DelContactToGroup(ContactData contact, GroupData group)
+        {
+            manager.Navigator.GoToHomePage();
+            ClearGroupFilter();
+            SelectContact(contact.Id);
+            SelectGroupToAdd(group.Name);
+            CommitAddingContactToGroup();
+            new WebDriverWait(driver, TimeSpan.FromSeconds(10))
+                .Until(d => d.FindElements(By.CssSelector("div.msgbox")).Count > 0);
+        }
         public ContactHelper Remove(int v)
         {
             manager.Navigator.GoToHomePage();
