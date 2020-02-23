@@ -21,6 +21,7 @@ namespace mantis_tests
         public JamesHelper James { get; private set; }
         public MailHelper Mail { get; private set; }
         public AdminHelper Admin { get; private set; }
+        public APIHelper API { get; private set; }
 
         private static ThreadLocal<ApplicationManager> app = new ThreadLocal<ApplicationManager>();
 
@@ -30,12 +31,13 @@ namespace mantis_tests
             //options.BrowserExecutableLocation = @"C:\Program Files\Mozilla Firefox_Esr\firefox.exe";
             //options.UseLegacyImplementation = true;
             driver = new FirefoxDriver();
-            baseURL = "http://localhost:8080/";
+            baseURL = "http://localhost:8080/mantisbt-1.2.17";
             Registration = new RegistrationHelper(this);
             Ftp = new FtpHelper(this);
             James = new JamesHelper(this);
             Mail = new MailHelper(this);
-            Admin = new AdminHelper(this);
+            Admin = new AdminHelper(this, baseURL);
+            API = new APIHelper(this);
         }
 
         ~ApplicationManager()
@@ -55,7 +57,7 @@ namespace mantis_tests
             if (!app.IsValueCreated)
             {
                 ApplicationManager newInstance = new ApplicationManager();
-                newInstance.driver.Url = "http://localhost/mantisbt-1.2.17/login_page.php";
+                newInstance.driver.Url = newInstance.baseURL + "/login_page.php";
                 app.Value = newInstance;
             }
             return app.Value;
