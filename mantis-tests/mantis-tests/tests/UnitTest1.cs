@@ -1,14 +1,26 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
-namespace mantis_tests.tests
+namespace mantis_tests
 {
-    [TestClass]
-    public class UnitTest1
+    [TestFixture]
+    public class UnitTest1 : TestBase
     {
-        [TestMethod]
+        [Test]
+
+        // проверка работы Телнет соединения
+
         public void TestMethod1()
         {
+            AccountData account = new AccountData()
+            {
+                Name = "xxx", Password = "yyy"
+            };
+            Assert.IsFalse(app.James.Verify(account));
+            app.James.Add(account);
+            Assert.IsTrue(app.James.Verify(account));
+            app.James.Delete(account);
+            Assert.IsFalse(app.James.Verify(account));
         }
     }
 }

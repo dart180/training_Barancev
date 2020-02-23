@@ -17,7 +17,24 @@ namespace mantis_tests
             OpenRegistrationForm();
             FillRegistrationForm(account);
             SubmitRegistration();
+            String url = GetConfirmationUrl();
+            FillPasswordForm(url);
+            SubmitPasswordForm();
+        }
 
+        private void SubmitPasswordForm()
+        {
+            throw new NotImplementedException();
+        }
+
+        private void FillPasswordForm(string url)
+        {
+            throw new NotImplementedException();
+        }
+
+        private string GetConfirmationUrl()
+        {
+            throw new NotImplementedException();
         }
 
         private void OpenRegistrationForm()
